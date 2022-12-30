@@ -1,42 +1,96 @@
 import pandas as pd
 
-def update_budget(budget, category, amount):
-    # Find the row with the specified category
-    row = budget[budget['Category'] == category]
+class Category:
+    def __init__(self, name, amount):
+        self.name = name
+        self.amount = amount
+
+class Budget:
+    def __init__(self):
+        self.data = pd.DataFrame(columns=['Category', 'Amount'])
     
-    # If the category doesn't exist, add a new row to the budget
-    if row.empty:
-        budget = pd.concat([budget, pd.DataFrame({'Category': category, 'Amount': amount}, index=[0])])
-    # If the category does exist, update the amount
-    else:
-        budget.loc[row.index, 'Amount'] = amount
+    def update_budget(self, category, action='add'):
+        if action == 'add':
+            # Add a new row to the budget
+            self.data = pd.concat([self.data, pd.DataFrame({'Category': category.name, 'Amount': category.amount}, index=[0])])
+        elif action == 'remove':
+            # Get the user's choice
+            remove_type = input('Enter "amount" to remove an amount from a category or "category" to remove the full category: ')
+            if remove_type == 'amount':
+                # Check if the category exists in the budget
+                if category.name in self.data['Category'].values:
+                    # Find the row with the specified category
+                    row = self.data[self.data['Category'] == category.name]
+                    # Check if the amount to be removed is less than or equal to the current amount
+                    if category.amount <= row['Amount'].values[0]:
+                        # Update the amount
+                        self.data.loc[row.index, 'Amount'] = row['Amount'].values[0] - category.amount
+                    else:
+                        print(f'Cannot remove {category.amount} from {category.name}! The current amount is {row["Amount"].values[0]}.')
+                else:
+                    print(f'Category {category.name} not found!')
+            elif remove_type == 'category':
+                # Remove the row with the specified category
+                self.data = self.data[self.data['Category'] != category.name]
+        elif action == 'change':
+            # Check if the category exists in the budget
+            if category.name in self.data['Category'].values:
+                # Find the row with the specified category
+                row = self.data[self.data['Category'] == category.name]
+                # Update the amount
+                self.data.loc[row.index, 'Amount'] = category.amount
+            else:
+                print(f'Category {category.name} not found!')
     
-    return budget
+    def save(self):
+        # Save the budget to a CSV file
+        self.data.to_csv('budget.csv', index=False)
 
-# Create a DataFrame to store the budget data
-budget = pd.DataFrame(columns=['Category', 'Amount'])
+def main():
+    # Create an instance of the Budget class
+    budget = Budget()
 
-# Add all of the categories and their corresponding amounts to the budget
-categories = ['Rent', 'Utilities', 'Groceries', 'Entertainment', 'Travels', 'Gifts', 'Eating Outside', 'Saving for Mortgage']
+    # Add all of the categories and their corresponding amounts to the budget
+    categories = ['Rent', 'Utilities', 'Groceries', 'Entertainment', 'Travels', 'Gifts', 'Eating Outside', 'Saving for Mortgage']
 
-for category in categories:
-    amount = int(input(f'Enter the amount for {category}: '))
-    budget = update_budget(budget, category, amount)
+    for category in categories:
+        while True:
+            try:
+                amount = input(f'Enter the amount for {category}: ')
+                if not amount.isdecimal():
+                    raise ValueError
+                amount = int(amount)
+                break
+            except ValueError:
+                print('Invalid input! Please enter a valid integer.')
+def main():
+    # Create an instance of the Budget class
+    budget = Budget()
 
-# Save the budget to a CSV file
-budget.to_csv('budget.csv', index=False)
+    # Add all of the categories and their corresponding amounts to the budget
+    categories = ['Rent', 'Utilities', 'Groceries', 'Entertainment', 'Travels', 'Gifts', 'Eating Outside', 'Saving for Mortgage']
 
-# Add or update multiple expenses
-expenses = [
-    ('Entertainment', 50),
-    ('Travels', 500),
-    ('Gifts', 100),
-    ('Eating Outside', 50),
-    ('Saving for Mortgage', 1000)
-]
+    for category in categories:
+        while True:
+            try:
+                amount = input(f'Enter the amount for {category}: ')
+                if not amount.isdecimal():
+                    raise ValueError
+                amount = int(amount)
+                break
+            except ValueError:
+                print('Invalid input! Please enter a valid integer.')
 
-for expense in expenses:
-    budget = update_budget(budget, expense[0], expense[1])
+        # Create a Category object and add it to the budget
+        cat = Category(category, amount)
+        budget.update_budget(cat)
 
-# Save the updated budget to the CSV file
-budget.to_csv('budget.csv', index=False)
+    # Save the budget to a CSV file
+    budget.save()
+
+if __name__ == '__main__':
+    main()
+
+                
+                
+
