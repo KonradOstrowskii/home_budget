@@ -1,0 +1,42 @@
+import pandas as pd
+
+def update_budget(budget, category, amount):
+    # Find the row with the specified category
+    row = budget[budget['Category'] == category]
+    
+    # If the category doesn't exist, add a new row to the budget
+    if row.empty:
+        budget = pd.concat([budget, pd.DataFrame({'Category': category, 'Amount': amount}, index=[0])])
+    # If the category does exist, update the amount
+    else:
+        budget.loc[row.index, 'Amount'] = amount
+    
+    return budget
+
+# Create a DataFrame to store the budget data
+budget = pd.DataFrame(columns=['Category', 'Amount'])
+
+# Add all of the categories and their corresponding amounts to the budget
+categories = ['Rent', 'Utilities', 'Groceries', 'Entertainment', 'Travels', 'Gifts', 'Eating Outside', 'Saving for Mortgage']
+
+for category in categories:
+    amount = int(input(f'Enter the amount for {category}: '))
+    budget = update_budget(budget, category, amount)
+
+# Save the budget to a CSV file
+budget.to_csv('budget.csv', index=False)
+
+# Add or update multiple expenses
+expenses = [
+    ('Entertainment', 50),
+    ('Travels', 500),
+    ('Gifts', 100),
+    ('Eating Outside', 50),
+    ('Saving for Mortgage', 1000)
+]
+
+for expense in expenses:
+    budget = update_budget(budget, expense[0], expense[1])
+
+# Save the updated budget to the CSV file
+budget.to_csv('budget.csv', index=False)
