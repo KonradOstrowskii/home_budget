@@ -6,15 +6,15 @@ class Budget:
         self.data = {}
         for category in self.categories:
             self.data[category] = 0
-    
+    # Features Add  expenses
     def add(self, category, amount):
         self.data[category] += amount
-    
+    # Features Remove expenses
     def remove(self, category, amount):
         self.data[category] -= amount
     
     def save(self, file_name):
-            # Load the existing data from the Excel file
+        # Load the existing data from the Excel file
         df = pd.read_excel(file_name, engine='openpyxl')
 
         # Convert the new data to a DataFrame
@@ -33,4 +33,3 @@ class Budget:
         budget_category = ['Rent', 'Utilities', 'Groceries', 'Entertainment', 'Travels', 'Gifts', 'Eating Outside', 'Mortgage']
         for number , category in enumerate(budget_category):
                 print(f"{number+1}:{category}")
-        
