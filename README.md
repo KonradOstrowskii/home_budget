@@ -19,3 +19,4 @@ add_expense(category, amount): Add an expense to the budget. category is the cat
 remove_expense(category, amount): Remove an expense from the budget. category is the category of the expense, and amount is the cost of the expense.
 save(file_name): Save the budget data to an Excel file. file_name is the name of the Excel file to save to (e.g. "budget.xlsx").
 open(file_name): Load the budget data from an Excel file. file_name is the name of the Excel file to load from (e.g. "budget.xlsx").
+<img width="835" alt="Zrzut ekranu 2023-01-04 o 15 41 06" src="https://user-images.githubusercontent.com/97406457/210580216-bef86104-9418-46e2-8571-c1fed9b6109c.png">
