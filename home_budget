@@ -44,8 +44,9 @@ def main():
         action = input('Enter "add" to add a category, "remove" to remove , "q" for exit : ')
         # Add an expense from the budget
         if action == "add":
-            print(budget_category)
-            category = input('Enter the category to add : ')
+            for number , category in enumerate(budget_category):
+                print(f"{number+1}:{category}")
+            category = input('Enter the category to add : ').capitalize()
             amount = int(input('Enter the amount to add : '))
             budget.add(category, amount)
             # # Save the updated budget to the CSV file
@@ -54,7 +55,7 @@ def main():
         # Remove an expense from the budget
         elif action == "remove" :
             print(budget_category)
-            category = input('Enter the category to remove: ')
+            category = input('Enter the category to remove: ').capitalize()
             amount = int(input('Enter the amount to remove: '))
             budget.remove(category, amount)
             # # Save the updated budget to the CSV file
