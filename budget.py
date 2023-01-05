@@ -28,8 +28,29 @@ class Budget:
             .format({col: '${:,.2f}'.format for col in self.categories}) \
             .hide(axis='index') \
             .to_excel(file_name, index=False)
-        
+    # Function showing all budget category  
     def budget_category(self):
         budget_category = ['Rent', 'Utilities', 'Groceries', 'Entertainment', 'Travels', 'Gifts', 'Eating Outside', 'Mortgage']
         for number , category in enumerate(budget_category):
                 print(f"{number+1}:{category}")
+    # Function showing transaction history
+    def transaction_history(self):
+        fd = pd.read_excel('budget.xlsx')
+        print(fd)
+    # Function counting chosen one by user
+    def count(self):
+        fd = pd.read_excel('budget.xlsx')
+        budget_category = ['Rent', 'Utilities', 'Groceries', 'Entertainment', 'Travels', 'Gifts', 'Eating Outside', 'Mortgage']
+        for number , category in enumerate(budget_category):
+                print(f"{number+1}:{category}")
+        try:        
+            count= input("What would You like to count? : ").capitalize()
+            sum =fd[count].sum()
+            print(sum)
+        except KeyError as e:
+                # This code will be executed if a KeyError occurs
+                print("Error: key not found in budget list")
+        
+     
+
+        
