@@ -1,11 +1,13 @@
 import pandas as pd
 import os
+import openpyxl
 
 
 class Budget:
     def __init__(self, categories):
         self.categories = categories
         self.data = {}
+        self.data_1 = {}
         for category in self.categories:
             self.data[category] = 0
             
@@ -21,23 +23,36 @@ class Budget:
     
     def save(self, file_name):
         # Load the existing data from the Excel file
-        df = pd.read_excel(file_name, engine='openpyxl')
+        wb = openpyxl.load_workbook(file_name)
+        sheet = wb.active
 
-        # Convert the new data to a DataFrame
-        new_df = pd.DataFrame([self.data])
+        # Find the last row of the sheet
+        last_row = sheet.max_row
 
-        # Combine the existing data with the new data
-        df = pd.concat([df, new_df], ignore_index=True)
+        # Update the values in the existing row
+        for i, category in enumerate(self.categories):
+            sheet.cell(row=last_row, column=i+1).value = self.data[category]
+
+        # Save the changes to the Excel file
+        sheet.insert_rows(sheet.max_row + 1)
+        wb.save(file_name)
+        
+    def new_row(self,file_name="budget.xlsx"):
+        df = pd.DataFrame([self.data])
+        new_df = pd.DataFrame([self.new_row])
+
+        # Combine the existing data with the new data, if the existing data is not empty
+        if not df.empty:
+            df = pd.concat([df, new_df], ignore_index=True)
+        else:
+            df = new_df
 
         # Save the combined data to the Excel file
         df.style.set_caption('Budget') \
             .format({col: '${:,.2f}'.format for col in self.categories}) \
             .hide(axis='index') \
             .to_excel(file_name, index=False)
-        # writer = pd.ExcelWriter(file_name, engine='openpyxl')
-        # writer.close()
-                 
-    # Function showing all budget category
+        
     def open(self,file_name) :
         
         path = "/Users/konrad/python_programs/budget.xlsx"
@@ -59,13 +74,13 @@ class Budget:
             df.to_excel(file_name, index=False)
             
             # Save the combined data to the Excel file
-            writer = pd.ExcelWriter(file_name, engine='openpyxl')
+            # writer = pd.ExcelWriter(file_name, engine='openpyxl')
             df.style.set_caption('Budget') \
                 .format({col: '${:,.2f}'.format for col in self.categories}) \
                 .hide(axis='index') \
                 .to_excel(file_name, index=False)
-            writer.if_sheet_exists('replace')
-            writer.close()
+            # writer.if_sheet_exists('replace')
+            # writer.close()
             
     def budget_category(self):
         budget_category = ['Rent', 'Utilities', 'Groceries', 'Entertainment', 'Travels', 'Gifts', 'Eating Outside', 'Mortgage']
@@ -86,4 +101,3 @@ class Budget:
         except KeyError as e:
                 # This code will be executed if a KeyError occurs
                 print("Error: key not found in budget list")
-        
