@@ -11,7 +11,7 @@ class Budget:
             
     # Features Add  expenses
     def add(self, category, amount):
-        self.data[category] += amount
+        self.data[category] = amount
         Budget.save(self,'budget.xlsx')
         
     # Features Remove expenses
@@ -31,9 +31,11 @@ class Budget:
 
         # Save the combined data to the Excel file
         df.style.set_caption('Budget') \
-            .format({col: '${:,.0f}'.format for col in self.categories}) \
+            .format({col: '${:,.2f}'.format for col in self.categories}) \
             .hide(axis='index') \
             .to_excel(file_name, index=False)
+        # writer = pd.ExcelWriter(file_name, engine='openpyxl')
+        # writer.close()
                  
     # Function showing all budget category
     def open(self,file_name) :
@@ -57,10 +59,13 @@ class Budget:
             df.to_excel(file_name, index=False)
             
             # Save the combined data to the Excel file
+            writer = pd.ExcelWriter(file_name, engine='openpyxl')
             df.style.set_caption('Budget') \
                 .format({col: '${:,.2f}'.format for col in self.categories}) \
                 .hide(axis='index') \
                 .to_excel(file_name, index=False)
+            writer.if_sheet_exists('replace')
+            writer.close()
             
     def budget_category(self):
         budget_category = ['Rent', 'Utilities', 'Groceries', 'Entertainment', 'Travels', 'Gifts', 'Eating Outside', 'Mortgage']
