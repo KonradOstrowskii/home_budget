@@ -7,7 +7,6 @@ class Budget:
     def __init__(self, categories):
         self.categories = categories
         self.data = {}
-        self.data_1 = {}
         for category in self.categories:
             self.data[category] = 0
             
