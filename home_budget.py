@@ -20,12 +20,15 @@ def main():
         if action == "add":
             budget.budget_category()
             try:
+                
                 category = input('Enter the category to add : ').capitalize()
                 amount = int(input('Enter the amount to add : '))
                 budget.add(category, amount)
+                
             except KeyError as e:
                 # This code will be executed if a KeyError occurs
                 print("Error: key not found in budget list")
+            
         # Remove an expense from the budget
         elif action == "remove" :
             budget.budget_category()
@@ -45,7 +48,6 @@ def main():
         # Exit   
         elif action == "q":
             # Save the updated budget to the Excel file
-            budget.save('budget.xlsx')
             break
 
         
