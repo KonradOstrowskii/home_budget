@@ -13,7 +13,7 @@ class Budget:
             
     # Features Add  expenses
     def add(self, category, amount):
-        self.data[category] = amount
+        self.data[category] =+ amount
         Budget.save(self,'budget.xlsx')
         
     # Features Remove expenses
@@ -38,20 +38,16 @@ class Budget:
         wb.save(file_name)
         
     def new_row(self,file_name="budget.xlsx"):
-        df = pd.DataFrame([self.data])
-        new_df = pd.DataFrame([self.new_row])
+        wb = openpyxl.load_workbook(file_name)
+        sheet = wb.active
 
-        # Combine the existing data with the new data, if the existing data is not empty
-        if not df.empty:
-            df = pd.concat([df, new_df], ignore_index=True)
-        else:
-            df = new_df
+        # Find the last row of the sheet
+        last_row = sheet.max_row
 
-        # Save the combined data to the Excel file
-        df.style.set_caption('Budget') \
-            .format({col: '${:,.2f}'.format for col in self.categories}) \
-            .hide(axis='index') \
-            .to_excel(file_name, index=False)
+        # Update the values in the existing row
+        for i, category in enumerate(self.categories):
+            sheet.cell(row=last_row+1, column=i+1).value = self.data[category]
+        wb.save(file_name)
         
     def open(self,file_name) :
         
