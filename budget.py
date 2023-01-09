@@ -12,7 +12,7 @@ class Budget:
             
     # Features Add  expenses
     def add(self, category, amount):
-        self.data[category] =+ amount
+        self.data[category] += amount
         Budget.save(self,'budget.xlsx')
         
     # Features Remove expenses
@@ -37,6 +37,7 @@ class Budget:
         wb.save(file_name)
         
     def new_row(self,file_name="budget.xlsx"):
+        # Load the existing data from the Excel file
         wb = openpyxl.load_workbook(file_name)
         sheet = wb.active
 
@@ -69,27 +70,26 @@ class Budget:
             df.to_excel(file_name, index=False)
             
             # Save the combined data to the Excel file
-            # writer = pd.ExcelWriter(file_name, engine='openpyxl')
             df.style.set_caption('Budget') \
                 .format({col: '${:,.2f}'.format for col in self.categories}) \
                 .hide(axis='index') \
                 .to_excel(file_name, index=False)
-            # writer.if_sheet_exists('replace')
-            # writer.close()
             
     def budget_category(self):
         budget_category = ['Rent', 'Utilities', 'Groceries', 'Entertainment', 'Travels', 'Gifts', 'Eating Outside', 'Mortgage']
         for number , category in enumerate(budget_category):
                 print(f"{number+1}:{category}")
+                
     # Function showing transaction history
     def transaction_history(self):
         fd = pd.read_excel('budget.xlsx')
         print(fd)
+        
     # Function counting chosen one by user
     def count(self):
         fd = pd.read_excel('budget.xlsx')
         Budget.budget_category(self)
-        try:        
+        try:     
             count= input("What would You like to count? : ").capitalize()
             sum =fd[count].sum()
             print(sum)
