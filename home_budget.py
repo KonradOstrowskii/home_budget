@@ -64,13 +64,14 @@ def main():
                 budget.transaction_history()
             # Function counting chosen one by user    
             elif action == "sum":
-                budget.count()
+                budget.count(budget_to_count=category_list)
             # Exit   
             elif action == "q":
                 # Save the updated budget to the Excel file
                 quit()
                 
-                
-                
+        
+
+
 if __name__ == '__main__':
     main()
