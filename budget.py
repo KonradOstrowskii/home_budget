@@ -7,17 +7,19 @@ class Budget:
     def __init__(self, categories):
         self.categories = categories
         self.data = {}
+        budget_category = ['Rent', 'Utilities', 'Groceries', 'Entertainment', 
+                           'Travels', 'Gifts', 'Eating Outside', 'Mortgage']
         for category in self.categories:
             self.data[category] = 0
             
     # Features Add  expenses
     def add(self, category, amount):
-        self.data[category] += amount
+        self.data[category] = amount
         Budget.save(self,'budget.xlsx')
         
     # Features Remove expenses
     def remove(self, category, amount):
-        self.data[category] -= amount
+        self.data[category] = -amount
         Budget.save(self,'budget.xlsx')
     
     def save(self, file_name):
@@ -78,7 +80,7 @@ class Budget:
     def budget_category(self):
         budget_category = ['Rent', 'Utilities', 'Groceries', 'Entertainment', 'Travels', 'Gifts', 'Eating Outside', 'Mortgage']
         for number , category in enumerate(budget_category):
-                print(f"{number+1}:{category}")
+                return(f"{number+1}:{category}")
                 
     # Function showing transaction history
     def transaction_history(self):
@@ -86,13 +88,14 @@ class Budget:
         print(fd)
         
     # Function counting chosen one by user
-    def count(self):
+    def count(self,budget_to_count):
         fd = pd.read_excel('budget.xlsx')
         Budget.budget_category(self)
         try:     
-            count= input("What would You like to count? : ").capitalize()
-            sum =fd[count].sum()
-            print(sum)
+            for number , category in enumerate(budget_to_count):
+                print(f"{number+1}:{category}")
+                sum =fd[category].sum()
+                print(sum)
         except KeyError as e:
                 # This code will be executed if a KeyError occurs
                 print("Error: key not found in budget list")
