@@ -16,7 +16,7 @@ def main():
             
             # Get the user's choice
             action = input('Enter "add" to add a category, "remove" to remove "history" to to see history,"sum" to sum value of a row "q" for exit : ')
-                        
+            # Check if action User chose is available          
             if action not in available_action:
                 print("This is not allowed action")
                 
@@ -24,12 +24,14 @@ def main():
             if action == "add":
                 # Creating new row for file
                 budget.new_row()
-                budget.budget_category() 
+                budget.budget_category(category_list) 
                 try:
                     for category in category_list :
                         while True:
                             try:
+                                # User input for the amount
                                 amount = int(input(f'Enter the amount to {category} : '))
+                                # Features Add  expenses
                                 budget.add(category, amount)
                             except ValueError as e:
                                 print("Amount only can be a numbers :")
@@ -44,12 +46,14 @@ def main():
             elif action == "remove" :
                 # Creating new row for file
                 budget.new_row()
-                budget.budget_category()
+                budget.budget_category(category_list)
                 try:
                     for category in category_list :
                         while True:
                             try:
+                                # User input for the amount
                                 amount = int(input(f'Enter the amount to {category} : '))
+                                # Features Remove  expenses
                                 budget.remove(category, amount)
                             except ValueError as e:
                                 print("Amount only can be a numbers :")
@@ -67,7 +71,7 @@ def main():
                 budget.count(budget_to_count=category_list)
             # Exit   
             elif action == "q":
-                # Save the updated budget to the Excel file
+                print("Thank You , see You next time !")
                 quit()
                 
         
