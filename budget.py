@@ -7,8 +7,6 @@ class Budget:
     def __init__(self, categories):
         self.categories = categories
         self.data = {}
-        budget_category = ['Rent', 'Utilities', 'Groceries', 'Entertainment', 
-                           'Travels', 'Gifts', 'Eating Outside', 'Mortgage']
         for category in self.categories:
             self.data[category] = 0
             
@@ -58,28 +56,30 @@ class Budget:
         if isExist == True:
             pass
         if isExist == False:
-            print("FileNotFoundError")
-            print("Creating New File")
-             # Create a DataFrame with the budget data
-            df = pd.DataFrame([self.data])
-            # Convert the new data to a DataFrame
-            new_df = pd.DataFrame([self.data])
+            try:  
+                print("FileNotFoundError")
+                print("Creating New File")
+                # Create a DataFrame with the budget data
+                df = pd.DataFrame([self.data])
+                # Convert the new data to a DataFrame
+                new_df = pd.DataFrame([self.data])
 
-            # Combine the existing data with the new data
-            df = pd.concat([df, new_df], ignore_index=True)
+                # Combine the existing data with the new data
+                df = pd.concat([df, new_df], ignore_index=True)
 
-            # Save the DataFrame to the Excel file
-            df.to_excel(file_name, index=False)
+                # Save the DataFrame to the Excel file
+                df.to_excel(file_name, index=False)
+                
+                # Save the combined data to the Excel file
+                df.style.set_caption('Budget') \
+                    .format({col: '${:,.2f}'.format for col in self.categories}) \
+                    .hide(axis='index') \
+                    .to_excel(file_name, index=False)
+            except TypeError as e:
+                print("'builtin_function_or_method' object is not iterable")
             
-            # Save the combined data to the Excel file
-            df.style.set_caption('Budget') \
-                .format({col: '${:,.2f}'.format for col in self.categories}) \
-                .hide(axis='index') \
-                .to_excel(file_name, index=False)
-            
-    def budget_category(self):
-        budget_category = ['Rent', 'Utilities', 'Groceries', 'Entertainment', 'Travels', 'Gifts', 'Eating Outside', 'Mortgage']
-        for number , category in enumerate(budget_category):
+    def budget_category(self,budget_category_show):
+        for number , category in enumerate(budget_category_show):
                 return(f"{number+1}:{category}")
                 
     # Function showing transaction history
@@ -87,7 +87,7 @@ class Budget:
         fd = pd.read_excel('budget.xlsx')
         print(fd)
         
-    # Function counting chosen one by user
+    # Function counting all category
     def count(self,budget_to_count):
         fd = pd.read_excel('budget.xlsx')
         Budget.budget_category(self)
@@ -99,3 +99,4 @@ class Budget:
         except KeyError as e:
                 # This code will be executed if a KeyError occurs
                 print("Error: key not found in budget list")
+                
