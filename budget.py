@@ -61,12 +61,7 @@ class Budget:
                 print("Creating New File")
                 # Create a DataFrame with the budget data
                 df = pd.DataFrame([self.data])
-                # Convert the new data to a DataFrame
-                new_df = pd.DataFrame([self.data])
-
-                # Combine the existing data with the new data
-                df = pd.concat([df, new_df], ignore_index=True)
-
+                
                 # Save the DataFrame to the Excel file
                 df.to_excel(file_name, index=False)
                 
@@ -90,7 +85,7 @@ class Budget:
     # Function counting all category
     def count(self,budget_to_count):
         fd = pd.read_excel('budget.xlsx')
-        Budget.budget_category(self)
+        # Budget.budget_category(self)
         try:     
             for number , category in enumerate(budget_to_count):
                 print(f"{number+1}:{category}")
@@ -100,3 +95,7 @@ class Budget:
                 # This code will be executed if a KeyError occurs
                 print("Error: key not found in budget list")
                 
+   
+            
+  
+
