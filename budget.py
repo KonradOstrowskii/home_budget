@@ -56,12 +56,15 @@ class Budget:
         if isExist == True:
             pass
         if isExist == False:
-            try:  
+            try:
                 print("FileNotFoundError")
                 print("Creating New File")
                 # Create a DataFrame with the budget data
                 df = pd.DataFrame([self.data])
                 
+                # Dropping rows with 0 values
+                df.drop(df.index[0], inplace=True)
+                 
                 # Save the DataFrame to the Excel file
                 df.to_excel(file_name, index=False)
                 
@@ -72,7 +75,8 @@ class Budget:
                     .to_excel(file_name, index=False)
             except TypeError as e:
                 print("'builtin_function_or_method' object is not iterable")
-            
+                
+    # Function that enumerate all category list       
     def budget_category(self,budget_category_show):
         for number , category in enumerate(budget_category_show):
                 return(f"{number+1}:{category}")
@@ -86,7 +90,7 @@ class Budget:
     def count(self,budget_to_count):
         fd = pd.read_excel('budget.xlsx')
         # Budget.budget_category(self)
-        try:     
+        try:
             for number , category in enumerate(budget_to_count):
                 print(f"{number+1}:{category}")
                 sum =fd[category].sum()
@@ -94,8 +98,4 @@ class Budget:
         except KeyError as e:
                 # This code will be executed if a KeyError occurs
                 print("Error: key not found in budget list")
-                
-   
-            
-  
-
+               
