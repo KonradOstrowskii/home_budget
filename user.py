@@ -17,15 +17,15 @@ class User:
         self.password = password
           
     @staticmethod
-    def check_username_exist(username: any)->bool:
+    def check_username_exist(username: str)->bool:
         """
-        Static method that checking if username already exist in DB 
+        Static method to check if username already exist in DB 
 
         Args:
-            username (any): Checking username in `DB`
+            username (str): Checking if username exists in `DB`
 
         Returns:
-            any: Return True/False depends if user exist or not
+            bool: Return True if exists and False if doesn't
         """
         cursor.execute("SELECT * FROM User WHERE username=?", (username,))
         if cursor.fetchone():
@@ -33,15 +33,15 @@ class User:
         return False
     
     @staticmethod
-    def check_valid_password(password: any) -> bool:
+    def check_valid_password(password: str) -> bool:
         """
-        Static method that checking if password got at least 8 char,at least one upper char and at least one digit
+        Static method to check if password got at least 8 chars, at least one upper char and at least one digit
 
         Args:
-            password (any): Checking  if password from User compiles with requirements
+            password (str): Checking password from User
 
         Returns:
-            bool: Return True/False
+            bool: Return True if password is correct and False if is incorrect
         """
         
         if len(password) < 8:
@@ -54,15 +54,15 @@ class User:
     
     # Static method that hash password using hashlib 
     @staticmethod
-    def hash_password(password:any)->any:
+    def hash_password(password:str)->str:
         """
         Static method that hash password using hashlib 
         """
         return sha256(password.encode()).hexdigest()
     
-    def check_login(username: any, password: any)-> any:
+    def check_login(username: str, password: str)-> any:
         """
-        Function that checking if username exist in `DB`
+        Function to check if username exist in `DB`
         """
         hashed_password = User.hash_password(password)
         cursor.execute("""
@@ -71,10 +71,10 @@ class User:
         """, (username, hashed_password))
         return cursor.fetchone() is not None
 
-def create_user(username: any, password: any)->any:
+def create_user(username: str, password: str)->any:
     """
-    Creating new user , checking if user already exist and verify if password compiles with requirements,
-    at least 8 character once uppercase letter and one digit
+    Creating new user, checking if user already exists and verify if password complies with requirements,
+    at least 8 character, one uppercase letter and one digit
     """
     if User.check_username_exist(username):
             print("username already exist")
