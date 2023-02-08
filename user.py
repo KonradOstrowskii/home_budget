@@ -1,15 +1,16 @@
 import sqlite3
+from hashlib import sha256
 
-with sqlite3.connect('user_base.db') as db:
+
+with sqlite3.connect("users.db") as db:
     cursor = db.cursor()
-# Creating DB containing users with ID, username, password
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS User(
 id INTEGER PRIMARY KEY,
 username TEXT NOT NULL,
 password TEXT NOT NULL);
 """)
-# User class 
+db.commit()
 class User:
     def __init__(self, username, password):
         self.username = username 
@@ -31,40 +32,54 @@ class User:
         elif not any(c.isdigit() for c in password):
             return False
         return True
-    # Creating new user 
-    def create(self):
-        if User.check_username_exist(self.username):
+    @staticmethod
+    def hash_password(password):
+        return sha256(password.encode()).hexdigest()
+    
+    def check_login(username, password):
+        hashed_password = User.hash_password(password)
+        cursor.execute("""
+        SELECT * FROM User
+        WHERE username=? AND password=?
+        """, (username, hashed_password))
+        return cursor.fetchone() is not None
+def add_user(username, password):
+    if User.check_username_exist(username):
             print("username already exist")
             return
-        if not User.check_valid_password(self.password):
-            print("Invalid password, it should be at least 8 characters, contain at least one uppercase letter and one digit")
-            return
-        cursor.execute("INSERT INTO User (username, password) VALUES (?,?)", (self.username, self.password))
-        db.commit()
-        print(f"user {self.username} created")
-        
+    if not User.check_valid_password(password):
+        print("Invalid password, it should be at least 8 characters, contain at least one uppercase letter and one digit")
+        return
+    hashed_password = User.hash_password(password)
+    cursor.execute("""
+    INSERT INTO User (username, password)
+    VALUES (?, ?)
+    """, (username, hashed_password))
+    db.commit()
 
-
-
-def create_new_user():
-    while True:
-        username = input("Enter a username: ")  
-        password = input("Enter a password: ")
-        if User.check_username_exist(username):
-            print("username already exist")
-            break
-        if not User.check_valid_password(password):
-            print("Invalid password, it should be at least 8 characters, contain at least one uppercase letter and one digit")
-            break
-        new_user = User(username, password)
-        new_user.create()
+def check_login(username, password):
+    hashed_password = User.hash_password(password)
+    cursor.execute("""
+    SELECT * FROM User
+    WHERE username=? AND password=?
+    """, (username, hashed_password))
+    return cursor.fetchone() is not None
+x = input("Add Username : ")
+y = input("Add password : ")
+add_user(x,y)
+while True:
+    username = input("Username: ")
+    password = input("Password: ")
+    if check_login(username, password):
+        print("Login successful.")
         break
+    else:
+        print("Login failed. Try again.")
 
-
-create_new_user()
+db.close()
 
 # Connect to the database
-conn = sqlite3.connect("user_base.db")
+conn = sqlite3.connect("users.db")
 
 # Create a cursor
 c = conn.cursor()
