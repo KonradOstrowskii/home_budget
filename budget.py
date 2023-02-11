@@ -98,30 +98,35 @@ class Budget:
         Returns:
             object: excel file`xlsx`
         """
-        path = "/Users/konrad/python_programs/budget.xlsx"
-        isExist = os.path.exists(path)
-        if isExist == True:
-            pass
-        if isExist == False:
-            try:
-                print("FileNotFoundError")
-                print("Creating New File")
-                # Create a DataFrame with the budget data
-                df = pd.DataFrame([self.data])
+        folder_name = "users_budgets"
+
+        folder_path = os.path.join(os.getcwd(), folder_name)
+
+        try:
+            os.makedirs(folder_path)
+        except OSError:
+            print ("Creation of the directory %s failed because folder already exist " % folder_path)
+        else:
+            print ("Successfully created the directory %s" % folder_path)       
+            # try:
+            print("FileNotFoundError")
+            print("Creating New File")
+            # Create a DataFrame with the budget data
+            df = pd.DataFrame([self.data])
+            
+            # Dropping rows with 0 values
+            df.drop(df.index[0], inplace=True)
                 
-                # Dropping rows with 0 values
-                df.drop(df.index[0], inplace=True)
-                 
-                # Save the DataFrame to the Excel file
-                df.to_excel(file_name, index=False)
-                
-                # Save the combined data to the Excel file
-                df.style.set_caption('Budget') \
-                    .format({col: '${:,.2f}'.format for col in self.categories}) \
-                    .hide(axis='index') \
-                    .to_excel(file_name, index=False)
-            except TypeError as e:
-                print("'builtin_function_or_method' object is not iterable")
+            # Save the DataFrame to the Excel file
+            df.to_excel(file_name, index=False)
+            
+            # Save the combined data to the Excel file
+            df.style.set_caption('Budget') \
+                .format({col: '${:,.2f}'.format for col in self.categories}) \
+                .hide(axis='index') \
+                .to_excel(file_name, index=False)
+            # except TypeError as e:
+            #     print("'builtin_function_or_method' object is not iterable")
                 
     def budget_category(self,budget_category_show: list)-> str:
         """
