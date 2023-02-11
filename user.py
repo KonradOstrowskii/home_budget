@@ -71,49 +71,64 @@ class User:
         """, (username, hashed_password))
         return cursor.fetchone() is not None
 
-def create_user(username: str, password: str)->any:
-    """
-    Creating new user, checking if user already exists and verify if password complies with requirements,
-    at least 8 character, one uppercase letter and one digit
-    """
-    if User.check_username_exist(username):
-            print("username already exist")
+    def create_user(username: str, password: str)->any:
+        """
+        Creating new user, checking if user already exists and verify if password complies with requirements,
+        at least 8 character, one uppercase letter and one digit
+        """
+        if User.check_username_exist(username):
+                print("username already exist")
+                return
+        if not User.check_valid_password(password):
+            print("Invalid password, it should be at least 8 characters, contain at least one uppercase letter and one digit")
             return
-    if not User.check_valid_password(password):
-        print("Invalid password, it should be at least 8 characters, contain at least one uppercase letter and one digit")
-        return
-    hashed_password = User.hash_password(password)
-    cursor.execute("""
-    INSERT INTO User (username, password)
-    VALUES (?, ?)
-    """, (username, hashed_password))
-    db.commit()
+        hashed_password = User.hash_password(password)
+        cursor.execute("""
+        INSERT INTO User (username, password)
+        VALUES (?, ?)
+        """, (username, hashed_password))
+        db.commit()
+    
+    def checking_users_in_db():
+        conn = sqlite3.connect("users.db")
 
-x = input("Add Username : ")
-y = input("Add password : ")
-create_user(x,y)
-while True:
-    username = input("Username: ")
-    password = input("Password: ")
-    if User.check_login(username, password):
-        print("Login successful.")
-        break
-    else:
-        print("Login failed. Try again.")
+        # Create a cursor
+        c = conn.cursor()
 
-db.close()
+        # Execute a SELECT statement
+        c.execute("SELECT * FROM User")
+
+        # Retrieve the results
+        result = c.fetchall()
+
+        # Print the results
+        print(result)
+
+# x = input("Add Username : ")
+# y = input("Add password : ")
+# create_user(x,y)
+# while True:
+#     username = input("Username: ")
+#     password = input("Password: ")
+#     if User.check_login(username, password):
+#         print("Login successful.")
+#         break
+#     else:
+#         print("Login failed. Try again.")
+
+# db.close()
 
 # Connect to the database
-conn = sqlite3.connect("users.db")
+# conn = sqlite3.connect("users.db")
 
-# Create a cursor
-c = conn.cursor()
+# # Create a cursor
+# c = conn.cursor()
 
-# Execute a SELECT statement
-c.execute("SELECT * FROM User")
+# # Execute a SELECT statement
+# c.execute("SELECT * FROM User")
 
-# Retrieve the results
-result = c.fetchall()
+# # Retrieve the results
+# result = c.fetchall()
 
-# Print the results
-print(result)
+# # Print the results
+# print(result)
