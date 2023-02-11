@@ -7,11 +7,9 @@ start_menu()
 action = input("Log In /Sing Up : ").upper()
 if action == "L":
     username = input("Username: ")
-    password = input("Password: ")
+    password = getpass.getpass("Password: ")
     if User.check_login(username, password):
-        print("""Checking credentials")
-...
-Login successful.""")
+        print("Checking credentials\n...\nLogin successful")
     else:
         print("Login failed. Try again.")
 if action == "S":
