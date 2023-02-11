@@ -87,7 +87,7 @@ class Budget:
             sheet.cell(row=last_row+1, column=i+1).value = self.data[category]
         wb.save(file_name)
         
-    def open(self,file_name: object) -> object:
+    def open(self,file_name: str) -> object:
         """
         1.Find path to file if exists open it, else create file in indicated path
         2.Create a DataFrame with the budget data
